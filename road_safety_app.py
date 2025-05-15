@@ -33,25 +33,20 @@ st.write(os.listdir("."))
 
 #     return joblib.load(model_path)
 
-
-
-#@st.cache_resource
+@st.cache_resource
 def download_and_load_model():
-    model_url = "https://drive.google.com/uc?export=download&id=1jNw8fW3nj7c8EmCQ8-s3NI4W4NIUBE5s"
+    file_id = "1jNw8fW3nj7c8EmCQ8-s3NI4W4NIUBE5s"
     model_path = "compressed_rf_model_v4.joblib.xz"
 
     if not os.path.exists(model_path):
-        print("Downloading model. This may take a moment...")
-        with requests.get(model_url, stream=True) as r:
-            r.raise_for_status()
-            with open(model_path, 'wb') as f:
-                for chunk in r.iter_content(chunk_size=8192):
-                    f.write(chunk)
-        print("Model downloaded.")
+        st.info("Downloading model from Google Drive...")
+        url = f"https://drive.google.com/uc?id={file_id}"
+        gdown.download(url, model_path, quiet=False)
 
-    return joblib.load(model_path)
+    if not os.path.exists(model_path) or os.path.getsize(model_path) < 1000:
+        raise ValueError("Model download failed or is incomplete.")
 
-    # Use lzma to open the compressed file
+    # ✅ Properly open and load the .xz-compressed model
     with lzma.open(model_path, "rb") as f:
         model = joblib.load(f)
 
