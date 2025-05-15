@@ -52,8 +52,15 @@ def download_and_load_model():
 
     return model
 
-rf_model1 = download_and_load_model()
-print(f"rf model from drive: {rf_model1}")
+try:
+    rf_model1 = download_and_load_model()
+    print(f"rf model from drive: {rf_model1}")
+    st.success("Model loaded successfully.")
+except Exception as e:
+    st.error(f"Failed to load model: {e}")
+    print(f"rf model fromdrive failed to load")
+    st.stop()
+
 
 
 # -------------------------
