@@ -35,7 +35,7 @@ st.write(os.listdir("."))
 
 
 
-@st.cache_resource
+#@st.cache_resource
 def download_and_load_model():
     # Google Drive file ID
     file_id = "1jNw8fW3nj7c8EmCQ8-s3NI4W4NIUBE5s"
