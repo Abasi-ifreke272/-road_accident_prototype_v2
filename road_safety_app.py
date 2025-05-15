@@ -37,16 +37,25 @@ st.write(os.listdir("."))
 
 #@st.cache_resource
 def download_and_load_model():
-    # Google Drive file ID
-    file_id = "1jNw8fW3nj7c8EmCQ8-s3NI4W4NIUBE5s"
+    model_url = "https://drive.google.com/uc?export=download&id=1jNw8fW3nj7c8EmCQ8-s3NI4W4NIUBE5s"
     model_path = "compressed_rf_model_v4.joblib.xz"
 
     if not os.path.exists(model_path):
-        st.info("Downloading model from Google Drive...")
-        url = f"https://drive.google.com/uc?id={file_id}"
-        gdown.download(url, model_path, quiet=False)
+        print("Downloading model. This may take a moment...")
+        with requests.get(model_url, stream=True) as r:
+            r.raise_for_status()
+            with open(model_path, 'wb') as f:
+                for chunk in r.iter_content(chunk_size=8192):
+                    f.write(chunk)
+        print("Model downloaded.")
 
     return joblib.load(model_path)
+
+    # Use lzma to open the compressed file
+    with lzma.open(model_path, "rb") as f:
+        model = joblib.load(f)
+
+    return model
 
 rf_model1 = download_and_load_model()
 print(f"rf model from drive: {rf_model1}")
