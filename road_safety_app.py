@@ -47,10 +47,11 @@ def download_and_load_model():
         raise ValueError("Model download failed or is incomplete.")
 
     # ✅ Properly open and load the .xz-compressed model
-    with lzma.open(model_path, "rb") as f:
-        model = joblib.load(f)
+    # with lzma.open(model_path, "rb") as f:
+    #     model = joblib.load(f)
 
-    return model
+    # return model
+    return joblib.load(model_path)
 
 try:
     rf_model1 = download_and_load_model()
